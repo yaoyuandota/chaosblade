@@ -314,13 +314,13 @@ func Prepare(processName, processId string) (response *spec.Response, port strin
 	}
 	var username string
 	port = record.Port
-	response, username = Attach(port, "", processId)
+	response, username = Attach(port, "", processId, "")
 	if !response.Success && username != "" && strings.Contains(response.Err, "connection refused") {
 		// if attach failed, search port from ~/.sandbox.token
 		port, err = CheckPortFromSandboxToken(username)
 		if err == nil {
 			logrus.Infof("use %s port to retry", port)
-			response, username = Attach(port, "", processId)
+			response, username = Attach(port, "", processId, "")
 			if response.Success {
 				// update port
 				err := db.UpdatePreparationPortByUid(record.Uid, port)
